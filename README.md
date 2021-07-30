@@ -2,7 +2,26 @@
 Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to Ocean Acidification
 
 
-* Quality profiling and reads correction on RNA-seq data using Fastp (version 0.20.0)
+* Quality trimming and quality control on DNA-seq data using Trim Galore! (version 0.6.5)
+
+
+  ```
+  trim_galore --fastqc --paired M1_1.fq M1_2.fq M2_1.fq M2_2.fq M3_1.fq M3_2.fq M4_1.fq M4_2.fq M5_1.fq M5_2.fq
+   ```
+
+
+* Combine DNA reads from all samples
+
+
+  ```
+  cat M1_1_val_1.fq M2_1_val_1.fq M3_1_val_1.fq M4_1_val_1.fq M5_1_val_1.fq > pooled_trimmed_reads_1.fq
+  ```
+  ```
+  cat M1_2_val_2.fq M2_2_val_2.fq M3_2_val_2.fq M4_2_val_2.fq M5_2_val_2.fq > pooled_trimmed_reads_2.fq
+  ```
+
+
+* Quality profiling and reads correction on RNA-seq data using Fastp (version 0.20.0) (Repeat for other samples)
 
 
   ```
@@ -10,11 +29,11 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
   ```
   
   
-* Kmer-based error correction on RNA-seq data using rCorrector (version 1.0.4). Download rCorrector and run the run_rcorrector.pl inside the folder. 
+* Kmer-based error correction on RNA-seq data using rCorrector (version 1.0.4)
 
 
   ```
-  perl run_rcorrector.pl -s Octo1_trimmed.fastq 
+  perl run_rcorrector.pl -s Octo1_trimmed.fastq,Octo2_trimmed.fastq,Octo3_trimmed.fastq,Octo4_trimmed.fastq,Octo5_trimmed.fastq,Octo6_trimmed.fastq
   ```
 
 
@@ -29,7 +48,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
     ```
 
 
-  * Map RNA-seq data to the combined Bowtie index. Only reads that are *not* aligned to the rRNA sequences will be used for further analysis
+  * Map RNA-seq data to the combined Bowtie index (repeat for other RNA-seq samples) (Only reads that are *not* aligned to the rRNA sequences will be used for further analysis)
 
 
     ```
@@ -99,7 +118,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
     ```
     
     
-  * Subset Swissprot ORFs using ```seqtk``` (version 1.2-r94)
+  * Subset Swissprot ORFs from transcriptome using ```seqtk``` (version 1.2-r94)
 
 
     ```
@@ -107,4 +126,64 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
     ```
     
     
+  * Build a Bowtie2 index of Swissprot ORFs
+
+
+    ```
+    bowtie2-build -f swissprotORF.fasta swissprotORF
+    ```
     
+    
+* Map DNA reads to Swissprot ORFs
+
+
+  * DNA reads Swissprot ORFs alignment (Samtools version: 1.7) (-F 260 retains only primary mapped reads)
+
+
+    ```
+    bowtie2 --local --threads 16 --quiet -t --met-file pooled_gDNA_orf_alignment_bowtie2_metrics.txt -q -x swissprotORF -1 pooled_trimmed_reads_1.fq -2 pooled_trimmed_reads_2.fq | samtools view -b -F 260 --threads 20 > primary_gDNA_orf_alignment.bam
+    ```
+
+
+  * Sort gDNA-ORF alignment file
+
+
+    ```
+    samtools sort -@ 16 -o primary_gDNA_orf_alignment_sorted.bam primary_gDNA_orf_alignment.bam
+    ```
+    
+    
+  * Index gDNA-ORF alignment file
+
+
+    ```
+    samtools index -b -@ 16 primary_gDNA_orf_alignmen_sorted.bam
+    ```
+
+
+* Map RNA reads to Swissprot ORFs (repeat for other samples)
+
+  * RNA reads Swissprot ORFs alignment (Samtools version: 1.7) (-F 260 retains only primary mapped reads)
+
+
+    ```
+    bowtie2 --local --threads 16 --quiet -t --met-file octo1_orf_alignment_bowtie2_metrics.txt -q -x swissprotORF -U blacklist_unpaired_unaligned_unfixrm_Octo1_trimmed.fq | samtools view -b -F 260 --threads 20 > primary_octo1_orf_alignment.bam
+    ```
+
+
+  * Sort RNA-ORF alignment file
+
+
+    ```
+    samtools sort -@ 16 -o primary_octo1_orf_alignment_sorted.bam primary_octo1_orf_alignment.bam
+    ```
+    
+    
+  * Index RNA-ORF alignment file
+
+
+    ```
+    samtools index -b -@ 16 primary_octo1_orf_alignment_sorted.bam
+    ```
+    
+  
