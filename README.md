@@ -126,6 +126,14 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
     ```
     
     
+  * Index Swissprot ORFs to allow random access when running editing sites detection later on
+
+
+    ```
+    samtools faidx swissprotORF.fasta
+    ```
+    
+    
   * Build a Bowtie2 index of Swissprot ORFs
 
 
@@ -141,7 +149,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
 
 
     ```
-    bowtie2 --local --threads 16 --quiet -t --met-file pooled_gDNA_orf_alignment_bowtie2_metrics.txt -q -x swissprotORF -1 pooled_trimmed_reads_1.fq -2 pooled_trimmed_reads_2.fq | samtools view -b -F 260 --threads 20 > primary_gDNA_orf_alignment.bam
+    bowtie2 --local --threads 16 --quiet -t --met-file pooled_gDNA_orf_alignment_bowtie2_metrics.txt -q -x swissprotORF -1 pooled_trimmed_reads_1.fq -2 pooled_trimmed_reads_2.fq | samtools view -b -F 260 --threads 20 > dna_orf_alignment.bam
     ```
 
 
@@ -149,7 +157,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
 
 
     ```
-    samtools sort -@ 16 -o primary_gDNA_orf_alignment_sorted.bam primary_gDNA_orf_alignment.bam
+    samtools sort -@ 16 -o dna_orf_alignment_sorted.bam dna_orf_alignment.bam
     ```
     
     
@@ -157,7 +165,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
 
 
     ```
-    samtools index -b -@ 16 primary_gDNA_orf_alignmen_sorted.bam
+    samtools index -b -@ 16 dna_orf_alignmen_sorted.bam
     ```
 
 
@@ -167,7 +175,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
 
 
     ```
-    bowtie2 --local --threads 16 --quiet -t --met-file octo1_orf_alignment_bowtie2_metrics.txt -q -x swissprotORF -U blacklist_unpaired_unaligned_unfixrm_Octo1_trimmed.fq | samtools view -b -F 260 --threads 20 > primary_octo1_orf_alignment.bam
+    bowtie2 --local --threads 16 --quiet -t --met-file octo1_orf_alignment_bowtie2_metrics.txt -q -x swissprotORF -U blacklist_unpaired_unaligned_unfixrm_Octo1_trimmed.fq | samtools view -b -F 260 --threads 20 > octo1_orf_alignment.bam
     ```
 
 
@@ -175,7 +183,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
 
 
     ```
-    samtools sort -@ 16 -o primary_octo1_orf_alignment_sorted.bam primary_octo1_orf_alignment.bam
+    samtools sort -@ 16 -o octo1_orf_alignment_sorted.bam octo1_orf_alignment.bam
     ```
     
     
@@ -183,7 +191,10 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
 
 
     ```
-    samtools index -b -@ 16 primary_octo1_orf_alignment_sorted.bam
+    samtools index -b -@ 16 octo1_orf_alignment_sorted.bam
     ```
+    
+    
+* Run ```editing_sites_screening.py```
     
   
