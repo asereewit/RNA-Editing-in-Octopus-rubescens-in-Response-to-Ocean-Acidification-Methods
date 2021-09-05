@@ -98,31 +98,14 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
     /ncbi-blast/ncbi-blast-2.10.1+/bin/blastx -query rubescens_transcriptome_ORF_ignore_nested.fasta -out rubescens_transcriptome_ORF_swissprot_blastx_1bestalignment.txt -db /ncbi-blast/blastdb/swissprot -evalue 1e-6 -max_target_seqs 1 -subject_besthit -outfmt "6 qaccver saccver pident bitscore evalue" -num_threads 16
     ```
     
-  * Select the transcript names that match to the Swissprot database using the Python snippet below:
-
-
-    ```python
-    import csv
-    
-    swissprot_hits_seqid=[]
-    with open('rubescens_transcriptome_ORF_swissprot_blastx_1bestalignment.txt') as txtfile:
-      csvreader=csv.reader(txtfile, delimiter='\t')
-      for row in csvreader:
-        swissprot_hits_seqid.append(row[0])
-      
-    hits_seqid_set = set(swissprot_hits_seqid) # remove duplicate transcript names in swissprot blastx hits
-    
-    with open('seqidname.lst','w') as idlist:
-      csvwriter = csv.writer(idlist)
-      csvwriter.writerows(hits_seqid_set)
-    ```
+  * Run ```swissprot_blastx_results_analysis.py``` to find names of ORFs that significantly aligned to SwissProt database and unique SwissProt protein IDs.
     
     
   * Subset Swissprot ORFs from transcriptome using ```seqtk``` (version 1.2-r94)
 
 
     ```
-    seqtk subseq rubescens_transcriptome_ORF_ignore_nested.fasta seqidname.lst > swissprotORF.fasta
+    seqtk subseq rubescens_transcriptome_ORF_ignore_nested.fasta swissprot_ORF_seqid.lst > swissprotORF.fasta
     ```
     
     
