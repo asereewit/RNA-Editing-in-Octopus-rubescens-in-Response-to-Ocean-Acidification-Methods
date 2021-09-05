@@ -95,7 +95,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
 
 
     ```
-    /ncbi-blast/ncbi-blast-2.10.1+/bin/blastx -query rubescens_transcriptome_ORF_ignore_nested.fasta -out rubescens_transcriptome_ORF_swissprotdb_blastx_1bestalignemnt.txt -db /ncbi-blast/blastdb/swissprot -evalue 1e-6 -max_target_seqs 1 -subject_besthit -outfmt "6 qaccver saccver pident bitscore evalue" -num_threads 16
+    /ncbi-blast/ncbi-blast-2.10.1+/bin/blastx -query rubescens_transcriptome_ORF_ignore_nested.fasta -out rubescens_transcriptome_ORF_swissprot_blastx_1bestalignment.txt -db /ncbi-blast/blastdb/swissprot -evalue 1e-6 -max_target_seqs 1 -subject_besthit -outfmt "6 qaccver saccver pident bitscore evalue" -num_threads 16
     ```
     
   * Select the transcript names that match to the Swissprot database using the Python snippet below:
