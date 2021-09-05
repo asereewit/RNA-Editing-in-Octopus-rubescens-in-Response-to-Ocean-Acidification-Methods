@@ -56,7 +56,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
     ```
   
   
-* Trinity (version 2.8.5) transcriptome assembly
+* Trinity (version 2.11.0) transcriptome assembly
 
 
   ```
@@ -106,6 +106,14 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
 
     ```
     seqtk subseq rubescens_transcriptome_ORF_ignore_nested.fasta swissprot_ORF_seqid.lst > swissprotORF.fasta
+    ```
+    
+    
+  * Generate ORFs Statistics using ```TrinityStat.pl``` (Trinity version 2.11.0) 
+
+
+    ```
+    perl Trinity2.11.0/trinityrnaseq-v2.11.0/util/TrinityStat.pl swissprotORF.fasta
     ```
     
     
