@@ -113,7 +113,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
 
 
     ```
-    perl Trinity2.11.0/trinityrnaseq-v2.11.0/util/TrinityStat.pl swissprotORF.fasta
+    perl Trinity2.11.0/trinityrnaseq-v2.11.0/util/TrinityStats.pl swissprotORF.fasta
     ```
     
     
