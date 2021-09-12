@@ -156,7 +156,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
 
 
     ```
-    samtools index -b -@ 16 octo_dna_orf_alignmen_sorted.bam
+    samtools index -b -@ 16 octo_dna_orf_alignment_sorted.bam
     ```
 
 
