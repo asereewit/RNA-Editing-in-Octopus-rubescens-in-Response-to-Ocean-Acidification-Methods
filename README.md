@@ -35,6 +35,14 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
   ```
   perl run_rcorrector.pl -s Octo1_trimmed.fastq,Octo2_trimmed.fastq,Octo3_trimmed.fastq,Octo4_trimmed.fastq,Octo5_trimmed.fastq,Octo6_trimmed.fastq
   ```
+  
+  
+* Run ```FilterUncorrectabledSEfastq.py``` to remove unfixable reads labelled by RCorrector (repeat for other samples)
+
+
+  ```
+  python3 FilterUncorrectabledSEfastq.py -i Octo1_trimmed.fq -s octo1_trimmed_corrected_log
+  ```
 
 
 * rRNA removal from RNA-seq data
