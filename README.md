@@ -148,7 +148,7 @@ Commands and Code for RNA Editing Detection in Octopus Rubescens in Response to 
 
 
     ```
-    bowtie2 --local --threads 16 --quiet -t --met-file pooled_gDNA_orf_alignment_bowtie2_metrics.txt -q -x swissprotORF -1 pooled_trimmed_reads_1.fq -2 pooled_trimmed_reads_2.fq | samtools view -b -F 260 --threads 20 > octo_dna_orf_alignment.bam
+    bowtie2 --local --threads 16 --quiet -t --met-file pooled_gDNA_orf_alignment_bowtie2_metrics.txt -q -x swissprotORF -U pooled_trimmed_reads_1.fq,pooled_trimmed_reads_2.fq | samtools view -b -F 260 --threads 20 > octo_dna_orf_alignment.bam
     ```
 
 
