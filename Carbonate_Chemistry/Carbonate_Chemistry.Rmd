@@ -1,0 +1,116 @@
+---
+title: "Carbonate Chemistry"
+author: "Jaydee Sereewit"
+date: "11/6/2021"
+output: pdf_document
+---
+
+# Installing older seacarb package and OTools package
+Uncomment lines 13 and 14 if you need to install those packages.  
+```{r}
+library(remotes)
+library(devtools)
+#install_version("seacarb", version = "3.2.14", repos = "http://cran.us.r-project.org")
+#install_github("KirtOnthank/OTools")
+library(seacarb)
+library(OTools)
+library(readODS)
+```
+
+
+```{r}
+files=list.files(recursive=T)
+```
+
+```{r}
+files.ph=files[grep("Spec_pH_Data",files)]
+```
+
+
+```{r}
+date.ph=gsub(".*(\\d\\d)_(\\d\\d)_(\\d\\d).ods","\\1-\\2-\\3",files.ph[1])
+data.ph=read_ods(files.ph[1],col_names=T)
+ph=specpH(data.ph$S,data.ph$T,data.ph$A434,data.ph$A578,data.ph$A730,data.ph$B434,data.ph$B578,data.ph$B730)
+ph.means=aggregate(ph~data.ph$Tank,FUN="mean")
+colnames(ph.means)[1]="tank"
+ph.means$date=date.ph
+ph.means$S=aggregate(data.ph$S~data.ph$Tank,FUN="mean")[,2]
+carbchem=ph.means
+
+
+for (i in 2:length(files.ph)){
+  date.ph=gsub(".*(\\d\\d)_(\\d\\d)_(\\d\\d).ods","\\1-\\2-\\3",files.ph[i])
+  data.ph=read_ods(files.ph[i],col_names=T)
+  ph=specpH(data.ph$S,data.ph$T,data.ph$A434,data.ph$A578,data.ph$A730,data.ph$B434,data.ph$B578,data.ph$B730)
+  ph.means=aggregate(ph~data.ph[,1],FUN="mean")
+  colnames(ph.means)[1]="tank"
+  ph.means$date=date.ph
+  ph.means$S=aggregate(data.ph[,3]~data.ph[,1],FUN="mean")[,2]
+
+  carbchem=rbind(carbchem,ph.means)
+}
+```
+
+
+```{r}
+aggregate(ph~tank,data=carbchem,FUN="sd")
+```
+
+```{r}
+carbchem[carbchem$tank==10,]
+```
+
+
+```{r}
+files.ti=files[grep("Titration_data/Titration",files)]
+
+ti.tank=gsub(".*Tank (\\d+) Run \\d.ods","\\1",files.ti[1])
+ti.filename=gsub(".*Titration_data/(.*)\\.ods","\\1",files.ti[1])
+ti=read_ods(files.ti[1],col_names = T)
+ti.at=at(ti[1,1],ti[1,8],ti[1,2],1,ti[1,3],ti[1,4],ti[1,5],ti[,6],ti[,7])[1]
+alk=data.frame(filename=ti.filename,tank=ti.tank,alk=ti.at)
+
+for (i in 2:length(files.ti)){
+  ti.tank=gsub(".*Tank (\\d+) Run \\d.ods","\\1",files.ti[i])
+  ti.filename=gsub(".*Titration_data/(.*)\\.ods","\\1",files.ti[i])
+  ti=read_ods(files.ti[i],col_names = T)
+  ti.at=at(ti[1,1],ti[1,8],ti[1,2],1,ti[1,3],ti[1,4],ti[1,5],ti[,6],ti[,7])[1]
+  alk=rbind(alk,data.frame(filename=ti.filename,tank=ti.tank,alk=ti.at))
+}
+
+alk.means=aggregate(alk~tank,data=alk,FUN="mean")
+
+```
+
+```{r}
+
+carbchem=carbchem[carbchem$tank %in% alk.means$tank,]
+carbchem$alk=0
+
+
+for (i in 1:nrow(carbchem)){
+  carbchem$alk[i]=alk.means$alk[alk.means$tank==carbchem$tank[i]]
+}
+
+```
+
+
+```{r}
+carbchem$pco2=carb(8,carbchem$ph,carbchem$alk,carbchem$S,10.8)$pCO2
+
+```
+
+
+
+```{r}
+write.csv(carbchem,"carbonate_chemistry.csv",row.names = F)
+```
+
+
+
+
+
+
+
+
+
