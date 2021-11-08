@@ -424,7 +424,7 @@ boxy$type=relevel(boxy$type,"synonymous")
 ```{r message=FALSE, warning=FALSE}
 png("syn.png",width=7,height=4,units="in",res=300,pointsize=7)
 boxplot(per~type+tissue,data=boxy,range=0,at=c(1,1.85,3,3.85,5,5.85),
-        ylim=c(-0.1,1.3),axes=F,xlab="",ylab="Editing level (%)",
+        ylim=c(-0.1,1.3),axes=F,xlab="",ylab="Mismatch level",
         col=c("white","grey"))
 axis(2,at=seq(from=0,to=1,by=0.2))
 text(mean(c(1,1.85)),-0.1,"octopus gill")
@@ -481,7 +481,7 @@ syn.wilcox
 png("high-low.png",width=7,height=4,units="in",res=300,pointsize=7)
 #svg("high-low.svg")
 boxplot(per~co2+syn,data=hilo,range=0,at=c(1.85,1,3.85,3),ylim=c(-0.1,1.3),
-        axes=F,xlab="",ylab="Editing level (%)",col=c("white","grey"))
+        axes=F,xlab="",ylab="Mismatch level",col=c("white","grey"))
 axis(2,at=seq(from=0,to=1,by=0.2))
 text(mean(c(1,1.85)),-0.1,"Synonymous")
 text(mean(c(3,3.85)),-0.1,"Nonsynonymous")
