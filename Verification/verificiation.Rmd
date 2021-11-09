@@ -1,0 +1,27 @@
+---
+title: "Editing site verification"
+author: "Jaydee Sereewit"
+date: "10/31/2021"
+output: pdf_document
+---
+
+
+
+```{r}
+veri_hi_co2 = asin(c(.98,.99,.99))
+veri_lo_co2 = asin(c(.98,.99,.96))
+```
+
+```{r}
+bartlett.test(c(veri_hi_co2,veri_lo_co2),c("a","a","a","b","b","b"))
+```
+```{r}
+ks.test(veri_hi_co2,"pnorm")
+ks.test(veri_lo_co2,"pnorm")
+```
+
+
+```{r}
+wilcox.test(veri_hi_co2,veri_lo_co2,alternative="two.sided")
+```
+
