@@ -6,7 +6,7 @@ authors:
     orcid: https://orcid.org/0000-0002-7937-6398
   - family-names: Onthank
     given-names: Kirt 
-title: "RNA Editing Detection Pipepline"
+title: "RNA Editing Detection Pipeline"
 version: 0.1.0
 doi: 10.5281/zenodo.5655824
 date-released: 2021-08-11
